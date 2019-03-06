@@ -1,0 +1,59 @@
+1	Begin Error Handling; Action: Stop Task; Options: Log to File,  Task Status: Fail
+2	     Read From Text File: "C:\Users\SLip023\Desktop\AA Files\Startpage Top 5\Search Strings.txt" Delimiter: 'NewLine' Header: 'No' Trim Leading Space: "Yes" Trim Trailing Space: "Yes" Session: 'Default'
+3	     Start Loop "Each row in a CSV/Text file of Session: Default"
+4	          Variable Operation: $Filedata Column(1)$ To $vSearchString$
+5	          If $vSearchString$ Equal To (=) "" Then  
+6	               Continue
+7	          End If
+8	          Navigate URL "https://www.startpage.com/"
+9	          Wait for Window to Open ("*Startpage*") (Wait up to 15 seconds - For Window to Open)
+10	          Delay: (2 sec)
+11	          Set text '$vSearchString$' into query in the webpage 'Startpage.com - The world's most private search engine' 
+12	          Click on 'Search' Command Button in the webpage 'Startpage.com - The world's most private search engine' 
+13	          Loop While $vCount$ Less than or Equal To(<=) "5" 
+14	               Get text from 1/1 (2018) - IMDb into "$Prompt-Assignment$" in the webpage 'Search results - Startpage.com' 
+15	               Variable Operation: $Prompt-Assignment$ To $vSearchResults($vCount$, 1)$
+16	               Get URL from 1/1 (2018) - IMDb into $Prompt-Assignment$ in the webpage 'Search results - Startpage.com' 
+17	               If $Prompt-Assignment$ Includes "www.startpage.com" Then  
+18	                    Variable Operation: $vResultIndex$ + 2 To $vResultIndex$
+19	                    Continue
+20	               End If
+21	               Variable Operation: $Prompt-Assignment$ To $vSearchResults($vCount$, 2)$
+22	               Variable Operation: $vCount$ + 1 To $vCount$
+23	               Variable Operation: $vResultIndex$ + 2 To $vResultIndex$
+24	          End Loop
+25	          Excel: Open Spreadsheet "C:\Users\SLip023\Desktop\AA Files\Startpage Top 5\Search Results.xlsx". ActiveSheet: "Default". Session: Default
+26	          Excel: Go to cell "A1". Session: Default
+27	          Excel: Go to end of the column of the active cell. Session: Default
+28	          Excel: Get value of Active Cell and assign to variable "$Prompt-Assignment$" Session: Default
+29	          If $Prompt-Assignment$ Not Equal To (<>) "" Then  
+30	               Excel: Go to one cell below the active cell. Session: Default
+31	               Excel: Go to one cell below the active cell. Session: Default
+32	          End If
+33	          Excel: Set value of Active Cell with "Search String:". Session: Default
+34	          Excel: Go to one cell right of active cell. Session: Default
+35	          Excel: Set value of Active Cell with "$vSearchString$". Session: Default
+36	          Excel: Go to one cell right of active cell. Session: Default
+37	          Excel: Set value of Active Cell with "Timestamp: $Date$". Session: Default
+38	          Excel: Go to one cell below the active cell. Session: Default
+39	          Excel: Go to one cell left from active cell. Session: Default
+40	          Excel: Set value of Active Cell with "URL". Session: Default
+41	          Excel: Go to one cell left from active cell. Session: Default
+42	          Excel: Set value of Active Cell with "TITLE". Session: Default
+43	          Excel: Go to one cell below the active cell. Session: Default
+44	          Start Loop "5" Times 
+45	               Excel: Set value of Active Cell with "$vSearchResults($Counter$,1)$". Session: Default
+46	               Excel: Go to one cell right of active cell. Session: Default
+47	               Excel: Set value of Active Cell with "$vSearchResults($Counter$,2)$". Session: Default
+48	               Excel: Go to one cell below the active cell. Session: Default
+49	               Excel: Go to beginning of the row of the active cell. Session: Default
+50	          End Loop
+51	          Variable Operation: "" To $Prompt-Assignment$
+52	          Variable Operation: 1 To $vCount$
+53	          Variable Operation: 13 To $vResultIndex$
+54	          Variable Operation: Reinitialize $vSearchResults$
+55	          Variable Operation: "" To $vSearchString$
+56	     End Loop
+57	     Excel: Close Spreadsheet. Session: Default
+58	     Close Browser
+59	End Error Handling
